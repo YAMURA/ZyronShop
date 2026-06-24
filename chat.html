@@ -189,7 +189,7 @@
         let isMusicPlaying = false;
 
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = localStorage.getItem('cluddy_current_user');
+            const userData = localStorage.getItem('zyron_current_user');
             if (!userData) { window.location.href = 'login.html'; return; }
             currentUser = JSON.parse(userData);
             document.getElementById('userName').textContent = currentUser.fullname || currentUser.username;
@@ -199,7 +199,7 @@
         });
 
         function loadMusic() {
-            const musicUrl = localStorage.getItem('cluddy_music_url');
+            const musicUrl = localStorage.getItem('zyron_music_url');
             if (musicUrl) { document.getElementById('musicSource').src = musicUrl; document.getElementById('bgMusic').load(); }
         }
 
@@ -207,14 +207,14 @@
             const music = document.getElementById('bgMusic');
             const icon = document.getElementById('musicIcon');
             const text = document.getElementById('musicText');
-            const musicUrl = localStorage.getItem('cluddy_music_url');
+            const musicUrl = localStorage.getItem('zyron_music_url');
             if (isMusicPlaying) { music.pause(); icon.className = 'bi bi-music-note'; text.textContent = 'Play Music'; icon.style.animation = 'none'; }
             else { if (musicUrl) { music.play().catch(e => console.log('Playback failed:', e)); icon.className = 'bi bi-music-note-beamed music-playing'; text.textContent = 'Playing...'; } }
             isMusicPlaying = !isMusicPlaying;
         }
 
         function loadChats() {
-            const chats = JSON.parse(localStorage.getItem('cluddy_support_chats')) || [];
+            const chats = JSON.parse(localStorage.getItem('zyron_support_chats')) || [];
             const userChats = chats.filter(c => c.userId === currentUser.id);
             const container = document.getElementById('chatContainer');
             
@@ -276,9 +276,9 @@
         }
 
         function saveChat(chat) {
-            const chats = JSON.parse(localStorage.getItem('cluddy_support_chats')) || [];
+            const chats = JSON.parse(localStorage.getItem('zyron_support_chats')) || [];
             chats.push(chat);
-            localStorage.setItem('cluddy_support_chats', JSON.stringify(chats));
+            localStorage.setItem('zyron_support_chats', JSON.stringify(chats));
             
             // Send to Telegram
             sendTelegramNotification(`💬 NEW SUPPORT MESSAGE\nFrom: ${chat.username}\nMessage: ${chat.message}\nTime: ${new Date(chat.timestamp).toLocaleString()}`);
@@ -309,7 +309,7 @@
             setTimeout(() => notification.remove(), 3000);
         }
 
-        function logout() { localStorage.removeItem('cluddy_current_user'); window.location.href = 'login.html'; }
+        function logout() { localStorage.removeItem('zyron_current_user'); window.location.href = 'login.html'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('active'); }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('active'); }
     </script>
