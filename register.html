@@ -252,7 +252,7 @@
             }
 
             // Get existing users
-            let users = JSON.parse(localStorage.getItem('cluddy_users')) || [];
+            let users = JSON.parse(localStorage.getItem('zyron_users')) || [];
             
             // Check if username exists
             if (users.find(u => u.username === username)) {
@@ -279,8 +279,8 @@
             };
 
             users.push(newUser);
-            localStorage.setItem('cluddy_users', JSON.stringify(users));
-            localStorage.setItem('cluddy_current_user', JSON.stringify(newUser));
+            localStorage.setItem('zyron_users', JSON.stringify(users));
+            localStorage.setItem('zyron_current_user', JSON.stringify(newUser));
 
             showNotification('Registration successful! Redirecting...', 'success');
             setTimeout(() => {
