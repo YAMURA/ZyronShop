@@ -305,7 +305,7 @@
         });
 
         function checkAdmin() {
-            const user = JSON.parse(localStorage.getItem('cluddy_current_user'));
+            const user = JSON.parse(localStorage.getItem('zyron_current_user'));
             if (!user || user.role !== 'admin') {
                 window.location.href = 'login.html';
                 return;
@@ -339,7 +339,7 @@
         }
 
         function loadCategoriesSelect() {
-            const categories = JSON.parse(localStorage.getItem('cluddy_categories')) || [];
+            const categories = JSON.parse(localStorage.getItem('zyron_categories')) || [];
             const select = document.getElementById('prodCategory');
             const editSelect = document.getElementById('editProdCategory');
             
@@ -354,7 +354,7 @@
         }
 
         function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem('cluddy_orders')) || [];
+            const orders = JSON.parse(localStorage.getItem('zyron_orders')) || [];
             const pendingOrders = orders.filter(o => o.status === 'pending');
             const container = document.getElementById('ordersList');
             
@@ -365,7 +365,7 @@
             
             container.innerHTML = pendingOrders.map(order => {
                 // Get user balance
-                const users = JSON.parse(localStorage.getItem('cluddy_users')) || [];
+                const users = JSON.parse(localStorage.getItem('zyron_users')) || [];
                 const user = users.find(u => u.id === order.userId);
                 const userBalance = user ? user.balance || 0 : 0;
                 const hasEnoughBalance = userBalance >= order.amount;
@@ -411,7 +411,7 @@
                 return;
             }
 
-            const orders = JSON.parse(localStorage.getItem('cluddy_orders')) || [];
+            const orders = JSON.parse(localStorage.getItem('zyron_orders')) || [];
             const orderIndex = orders.findIndex(o => o.orderId === orderId);
             
             if (orderIndex === -1) {
@@ -422,7 +422,7 @@
             const order = orders[orderIndex];
             
             // Get the user
-            const users = JSON.parse(localStorage.getItem('cluddy_users')) || [];
+            const users = JSON.parse(localStorage.getItem('zyron_users')) || [];
             const userIndex = users.findIndex(u => u.id === order.userId);
             
             if (userIndex === -1) {
@@ -443,30 +443,30 @@
             user.balance = (user.balance || 0) - order.amount;
             
             // Update users list
-            localStorage.setItem('cluddy_users', JSON.stringify(users));
+            localStorage.setItem('zyron_users', JSON.stringify(users));
             
             // Update current session if this user is logged in
-            const currentUserData = localStorage.getItem('cluddy_current_user');
+            const currentUserData = localStorage.getItem('zyron_current_user');
             if (currentUserData) {
                 const currentUser = JSON.parse(currentUserData);
                 if (currentUser.id === order.userId) {
                     currentUser.balance = user.balance;
-                    localStorage.setItem('cluddy_current_user', JSON.stringify(currentUser));
+                    localStorage.setItem('zyron_current_user', JSON.stringify(currentUser));
                     // Mark that balance was updated for this user
-                    localStorage.setItem('cluddy_just_approved_' + currentUser.id, 'true');
+                    localStorage.setItem('zyron_just_approved_' + currentUser.id, 'true');
                 }
             }
             
             // Update order status
             orders[orderIndex].status = 'approved';
             orders[orderIndex].approvedAt = new Date().toISOString();
-            localStorage.setItem('cluddy_orders', JSON.stringify(orders));
+            localStorage.setItem('zyron_orders', JSON.stringify(orders));
             
             // Assign product key to user if available
-            const products = JSON.parse(localStorage.getItem('cluddy_products')) || [];
+            const products = JSON.parse(localStorage.getItem('zyron_products')) || [];
             const product = products.find(p => p.id == order.productId);
             if (product && product.key) {
-                const userKeys = JSON.parse(localStorage.getItem('cluddy_user_keys_' + order.userId)) || [];
+                const userKeys = JSON.parse(localStorage.getItem('zyron_user_keys_' + order.userId)) || [];
                 userKeys.push({
                     productId: order.productId,
                     productName: order.productName,
@@ -474,7 +474,7 @@
                     purchasedAt: new Date().toISOString(),
                     orderId: order.orderId
                 });
-                localStorage.setItem('cluddy_user_keys_' + order.userId, JSON.stringify(userKeys));
+                localStorage.setItem('zyron_user_keys_' + order.userId, JSON.stringify(userKeys));
             }
             
             showNotification(`Order #${orderId} approved! Balance deducted: ₱${order.amount.toFixed(2)}`, 'success');
@@ -488,22 +488,22 @@
             const reason = prompt('Reason for declining (optional):');
             if (reason === null) return; // User cancelled
             
-            const orders = JSON.parse(localStorage.getItem('cluddy_orders')) || [];
+            const orders = JSON.parse(localStorage.getItem('zyron_orders')) || [];
             const orderIndex = orders.findIndex(o => o.orderId === orderId);
             
             if (orderIndex !== -1) {
                 // Restore stock
-                const products = JSON.parse(localStorage.getItem('cluddy_products')) || [];
+                const products = JSON.parse(localStorage.getItem('zyron_products')) || [];
                 const product = products.find(p => p.id == orders[orderIndex].productId);
                 if (product) {
                     product.stock = (product.stock || 0) + (orders[orderIndex].quantity || 1);
-                    localStorage.setItem('cluddy_products', JSON.stringify(products));
+                    localStorage.setItem('zyron_products', JSON.stringify(products));
                 }
                 
                 orders[orderIndex].status = 'declined';
                 orders[orderIndex].declinedAt = new Date().toISOString();
                 orders[orderIndex].declineReason = reason || 'No reason provided';
-                localStorage.setItem('cluddy_orders', JSON.stringify(orders));
+                localStorage.setItem('zyron_orders', JSON.stringify(orders));
                 
                 showNotification(`Order #${orderId} declined`, 'warning');
                 loadOrders();
@@ -513,7 +513,7 @@
         }
 
         function loadDeposits() {
-            const deposits = JSON.parse(localStorage.getItem('cluddy_deposits')) || [];
+            const deposits = JSON.parse(localStorage.getItem('zyron_deposits')) || [];
             const pendingDeposits = deposits.filter(d => d.status === 'pending');
             const container = document.getElementById('depositsList');
             
@@ -552,8 +552,8 @@
                 return;
             }
 
-            const deposits = JSON.parse(localStorage.getItem('cluddy_deposits')) || [];
-            const users = JSON.parse(localStorage.getItem('cluddy_users')) || [];
+            const deposits = JSON.parse(localStorage.getItem('zyron_deposits')) || [];
+            const users = JSON.parse(localStorage.getItem('zyron_users')) || [];
             const depositIndex = deposits.findIndex(d => d.id == depositId);
             
             if (depositIndex === -1) {
@@ -572,22 +572,22 @@
             
             // Add balance to user
             users[userIndex].balance = (users[userIndex].balance || 0) + deposit.amount;
-            localStorage.setItem('cluddy_users', JSON.stringify(users));
+            localStorage.setItem('zyron_users', JSON.stringify(users));
             
             // Update current session if this user is logged in
-            const currentUserData = localStorage.getItem('cluddy_current_user');
+            const currentUserData = localStorage.getItem('zyron_current_user');
             if (currentUserData) {
                 const currentUser = JSON.parse(currentUserData);
                 if (currentUser.id === deposit.userId) {
                     currentUser.balance = users[userIndex].balance;
-                    localStorage.setItem('cluddy_current_user', JSON.stringify(currentUser));
+                    localStorage.setItem('zyron_current_user', JSON.stringify(currentUser));
                 }
             }
             
             // Update deposit status
             deposits[depositIndex].status = 'approved';
             deposits[depositIndex].approvedAt = new Date().toISOString();
-            localStorage.setItem('cluddy_deposits', JSON.stringify(deposits));
+            localStorage.setItem('zyron_deposits', JSON.stringify(deposits));
             
             showNotification(`Deposit of ₱${deposit.amount.toFixed(2)} approved!`, 'success');
             loadDeposits();
@@ -596,7 +596,7 @@
         }
 
         function loadProductsList() {
-            const products = JSON.parse(localStorage.getItem('cluddy_products')) || [];
+            const products = JSON.parse(localStorage.getItem('zyron_products')) || [];
             const container = document.getElementById('productsList');
             
             if (products.length === 0) {
@@ -629,7 +629,7 @@
 
         function addProduct(event) {
             event.preventDefault();
-            const products = JSON.parse(localStorage.getItem('cluddy_products')) || [];
+            const products = JSON.parse(localStorage.getItem('zyron_products')) || [];
             
             const category = document.getElementById('prodCategory').value;
             if (!category) {
@@ -651,7 +651,7 @@
             };
             
             products.push(newProduct);
-            localStorage.setItem('cluddy_products', JSON.stringify(products));
+            localStorage.setItem('zyron_products', JSON.stringify(products));
             
             showNotification('Product added successfully!', 'success');
             document.getElementById('productForm').reset();
@@ -659,7 +659,7 @@
         }
 
         function editProduct(productId) {
-            const products = JSON.parse(localStorage.getItem('cluddy_products')) || [];
+            const products = JSON.parse(localStorage.getItem('zyron_products')) || [];
             const product = products.find(p => p.id === productId);
             if (!product) return;
             
@@ -680,7 +680,7 @@
 
         function updateProduct(event) {
             event.preventDefault();
-            const products = JSON.parse(localStorage.getItem('cluddy_products')) || [];
+            const products = JSON.parse(localStorage.getItem('zyron_products')) || [];
             const productId = parseInt(document.getElementById('editProdId').value);
             const productIndex = products.findIndex(p => p.id === productId);
             
@@ -697,7 +697,7 @@
                     key: document.getElementById('editProdKey').value || '',
                     status: document.getElementById('editProdStatus').value
                 };
-                localStorage.setItem('cluddy_products', JSON.stringify(products));
+                localStorage.setItem('zyron_products', JSON.stringify(products));
                 showNotification('Product updated!', 'success');
                 closeModal('editProductModal');
                 loadProductsList();
@@ -706,16 +706,16 @@
 
         function deleteProduct(productId) {
             if (confirm('Are you sure you want to delete this product?')) {
-                let products = JSON.parse(localStorage.getItem('cluddy_products')) || [];
+                let products = JSON.parse(localStorage.getItem('zyron_products')) || [];
                 products = products.filter(p => p.id !== productId);
-                localStorage.setItem('cluddy_products', JSON.stringify(products));
+                localStorage.setItem('zyron_products', JSON.stringify(products));
                 showNotification('Product deleted', 'warning');
                 loadProductsList();
             }
         }
 
         function loadCategories() {
-            const categories = JSON.parse(localStorage.getItem('cluddy_categories')) || [];
+            const categories = JSON.parse(localStorage.getItem('zyron_categories')) || [];
             const container = document.getElementById('categoriesList');
             
             if (categories.length === 0) {
@@ -741,7 +741,7 @@
 
         function addCategory(event) {
             event.preventDefault();
-            const categories = JSON.parse(localStorage.getItem('cluddy_categories')) || [];
+            const categories = JSON.parse(localStorage.getItem('zyron_categories')) || [];
             
             const newCategory = {
                 name: document.getElementById('catName').value,
@@ -755,7 +755,7 @@
             }
             
             categories.push(newCategory);
-            localStorage.setItem('cluddy_categories', JSON.stringify(categories));
+            localStorage.setItem('zyron_categories', JSON.stringify(categories));
             
             showNotification('Category added!', 'success');
             document.getElementById('categoryForm').reset();
@@ -765,9 +765,9 @@
 
         function deleteCategory(catName) {
             if (confirm(`Delete category "${catName}"?`)) {
-                let categories = JSON.parse(localStorage.getItem('cluddy_categories')) || [];
+                let categories = JSON.parse(localStorage.getItem('zyron_categories')) || [];
                 categories = categories.filter(c => c.name !== catName);
-                localStorage.setItem('cluddy_categories', JSON.stringify(categories));
+                localStorage.setItem('zyron_categories', JSON.stringify(categories));
                 showNotification('Category deleted', 'warning');
                 loadCategories();
                 loadCategoriesSelect();
@@ -775,7 +775,7 @@
         }
 
         function loadFeedback() {
-            const feedbacks = JSON.parse(localStorage.getItem('cluddy_feedback')) || [];
+            const feedbacks = JSON.parse(localStorage.getItem('zyron_feedback')) || [];
             const container = document.getElementById('feedbackList');
             
             if (feedbacks.length === 0) {
@@ -801,7 +801,7 @@
         }
 
         function loadUsers() {
-            const users = JSON.parse(localStorage.getItem('cluddy_users')) || [];
+            const users = JSON.parse(localStorage.getItem('zyron_users')) || [];
             const container = document.getElementById('usersList');
             
             if (users.length === 0) {
@@ -826,7 +826,7 @@
         }
 
         function loadAnnouncements() {
-            const announcements = JSON.parse(localStorage.getItem('cluddy_announcements')) || [];
+            const announcements = JSON.parse(localStorage.getItem('zyron_announcements')) || [];
             const container = document.getElementById('announcementsList');
             
             if (announcements.length === 0) {
@@ -850,14 +850,14 @@
             const message = document.getElementById('announceMsg').value;
             const type = document.getElementById('announceType').value;
             
-            const announcements = JSON.parse(localStorage.getItem('cluddy_announcements')) || [];
+            const announcements = JSON.parse(localStorage.getItem('zyron_announcements')) || [];
             announcements.push({
                 id: Date.now(),
                 message: message,
                 type: type,
                 timestamp: new Date().toISOString()
             });
-            localStorage.setItem('cluddy_announcements', JSON.stringify(announcements));
+            localStorage.setItem('zyron_announcements', JSON.stringify(announcements));
             
             showNotification('Announcement posted!', 'success');
             document.getElementById('announcementForm').reset();
@@ -867,7 +867,7 @@
         }
 
         function loadChats() {
-            const chats = JSON.parse(localStorage.getItem('cluddy_support_chats')) || [];
+            const chats = JSON.parse(localStorage.getItem('zyron_support_chats')) || [];
             const container = document.getElementById('chatsList');
             
             if (chats.length === 0) {
@@ -895,12 +895,12 @@
         function replyToChat(chatId) {
             const reply = prompt('Enter your reply:');
             if (reply) {
-                const chats = JSON.parse(localStorage.getItem('cluddy_support_chats')) || [];
+                const chats = JSON.parse(localStorage.getItem('zyron_support_chats')) || [];
                 const chatIndex = chats.findIndex(c => c.id == chatId);
                 if (chatIndex !== -1) {
                     chats[chatIndex].reply = reply;
                     chats[chatIndex].replied = true;
-                    localStorage.setItem('cluddy_support_chats', JSON.stringify(chats));
+                    localStorage.setItem('zyron_support_chats', JSON.stringify(chats));
                     loadChats();
                     
                     sendTelegramNotification(`💬 REPLY TO ${chats[chatIndex].username}\n${reply}`);
@@ -924,7 +924,7 @@
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                localStorage.setItem('cluddy_music_url', e.target.result);
+                localStorage.setItem('zyron_music_url', e.target.result);
                 showNotification('Music uploaded successfully!', 'success');
                 loadMusicStatus();
             };
@@ -932,7 +932,7 @@
         }
 
         function loadMusicStatus() {
-            const musicUrl = localStorage.getItem('cluddy_music_url');
+            const musicUrl = localStorage.getItem('zyron_music_url');
             const statusSpan = document.getElementById('musicStatus');
             if (musicUrl) {
                 statusSpan.textContent = 'Music uploaded';
@@ -945,7 +945,7 @@
 
         function removeMusic() {
             if (confirm('Remove uploaded music?')) {
-                localStorage.removeItem('cluddy_music_url');
+                localStorage.removeItem('zyron_music_url');
                 showNotification('Music removed', 'warning');
                 loadMusicStatus();
             }
@@ -967,7 +967,7 @@
         }
 
         function logout() {
-            localStorage.removeItem('cluddy_current_user');
+            localStorage.removeItem('zyron_current_user');
             window.location.href = 'login.html';
         }
 
