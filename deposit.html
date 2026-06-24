@@ -310,7 +310,7 @@
         let isMusicPlaying = false;
 
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = localStorage.getItem('cluddy_current_user');
+            const userData = localStorage.getItem('zyron_current_user');
             if (!userData) {
                 window.location.href = 'login.html';
                 return;
@@ -324,7 +324,7 @@
         });
 
         function loadMusic() {
-            const musicUrl = localStorage.getItem('cluddy_music_url');
+            const musicUrl = localStorage.getItem('zyron_music_url');
             if (musicUrl) {
                 document.getElementById('musicSource').src = musicUrl;
                 document.getElementById('bgMusic').load();
@@ -335,7 +335,7 @@
             const music = document.getElementById('bgMusic');
             const icon = document.getElementById('musicIcon');
             const text = document.getElementById('musicText');
-            const musicUrl = localStorage.getItem('cluddy_music_url');
+            const musicUrl = localStorage.getItem('zyron_music_url');
             
             if (isMusicPlaying) {
                 music.pause();
@@ -408,9 +408,9 @@
                 status: 'pending'
             };
 
-            const deposits = JSON.parse(localStorage.getItem('cluddy_deposits')) || [];
+            const deposits = JSON.parse(localStorage.getItem('zyron_deposits')) || [];
             deposits.push(deposit);
-            localStorage.setItem('cluddy_deposits', JSON.stringify(deposits));
+            localStorage.setItem('zyron_deposits', JSON.stringify(deposits));
 
             // Send to Telegram
             sendTelegramNotification(`💰 NEW DEPOSIT\nUser: ${deposit.username}\nAmount: ₱${deposit.amount}\nMethod: ${deposit.method.toUpperCase()}`);
@@ -423,7 +423,7 @@
         }
 
         function loadDepositHistory() {
-            const deposits = JSON.parse(localStorage.getItem('cluddy_deposits')) || [];
+            const deposits = JSON.parse(localStorage.getItem('zyron_deposits')) || [];
             const userDeposits = deposits.filter(d => d.userId === currentUser.id).reverse();
             const container = document.getElementById('depositsHistory');
             
@@ -473,7 +473,7 @@
         }
 
         function logout() {
-            localStorage.removeItem('cluddy_current_user');
+            localStorage.removeItem('zyron_current_user');
             window.location.href = 'login.html';
         }
 
