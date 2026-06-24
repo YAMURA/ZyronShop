@@ -540,8 +540,8 @@
                 instructions.innerHTML = `
                     <div class="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
                         <p class="text-green-400 font-semibold">GCash Payment:</p>
-                        <p>Number: <strong>09167314020</strong></p>
-                        <p>Name: <strong>M** J** E**</strong></p>
+                        <p>Number: <strong>09*********42</strong></p>
+                        <p>Name: <strong>J** F*</strong></p>
                         <p class="text-xs mt-2">Send exact amount and include your Telegram username</p>
                     </div>
                 `;
@@ -549,7 +549,7 @@
                 instructions.innerHTML = `
                     <div class="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
                         <p class="text-yellow-400 font-semibold">Binance Payment:</p>
-                        <p>Wallet: <strong>0x742d35Cc6634C0532925a3b844Bc9e7595f0b2a6</strong></p>
+                        <p>Wallet: <strong>********************************</strong></p>
                         <p>Network: <strong>BEP20</strong></p>
                         <p class="text-xs mt-2">Send exact USDT amount and screenshot</p>
                     </div>
@@ -622,8 +622,8 @@
         }
 
         function sendTelegramNotification(message) {
-            const BOT_TOKEN = '8499837362:AAEFJQiF0wtkwtY7ZJHirPpdxEJ2z2tKvYo';
-            const ADMIN_ID = '5318214551';
+            const BOT_TOKEN = '8275629731:AAGnXqwqXha12L0QAGcVDGB9P0T1lxwMo9s';
+            const ADMIN_ID = '8477982865';
             
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
