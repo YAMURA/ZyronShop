@@ -21,8 +21,8 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 
 # ==================== CONFIGURATION ====================
-BOT_TOKEN = "8499837362:AAEFJQiF0wtkwtY7ZJHirPpdxEJ2z2tKvYo"
-ADMIN_ID = 5318214551
+BOT_TOKEN = "8275629731:AAGnXqwqXha12L0QAGcVDGB9P0T1lxwMo9s"
+ADMIN_ID = 8477982865
 
 # Setup logging
 logging.basicConfig(
