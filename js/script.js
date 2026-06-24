@@ -1,6 +1,6 @@
 // ==================== API ENDPOINTS ====================
 const API = {
-    base: window.location.origin + '/cluddy-shop/api/',
+    base: window.location.origin + '/zyron-shop/api/',
     auth: 'auth.php',
     products: 'products.php',
     orders: 'orders.php',
@@ -692,7 +692,7 @@ function scrollToSection(sectionId) {
 
 // ==================== MUSIC PLAYER ====================
 let isMusicPlaying = false;
-let musicFile = localStorage.getItem('cluddy_music_url');
+let musicFile = localStorage.getItem('zyron_music_url');
 
 function loadMusic() {
     if (musicFile) {
